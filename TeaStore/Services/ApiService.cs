@@ -27,7 +27,7 @@ namespace TeaStore.Services
             if (!response.IsSuccessStatusCode) return false;
             return true;
         }
-        public async static Task<bool> Login(string email, string password)
+        public static async Task<bool> Login(string email, string password)
         {
             var login = new Login()
             {
@@ -53,7 +53,7 @@ namespace TeaStore.Services
             var response = await httpclient.GetStringAsync(AppSetting.ApiUrl + "api/users/profileimage");
             return JsonConvert.DeserializeObject<ProfileImage>(response);
         }
-        public async static Task<bool> UploadUserImage(byte[] imageArray)
+        public static async Task<bool> UploadUserImage(byte[] imageArray)
         {
            
             var httpclient = new HttpClient();
@@ -68,8 +68,9 @@ namespace TeaStore.Services
         public static async Task<List<Category>> GetCategories()
         {
             var httpclient = new HttpClient();
-            httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
-            var response = await httpclient.GetStringAsync(AppSetting.ApiUrl + "api/categories");
+            var accessToken = Preferences.Get("accessToken", string.Empty);
+            httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
+            var response = await httpclient.GetStringAsync(AppSetting.ApiUrl + "api/categories"); 
             return JsonConvert.DeserializeObject<List<Category>>(response);
         }
         public static async Task<List<Product>> GetProducts(string productType,string categoryId)
@@ -79,12 +80,12 @@ namespace TeaStore.Services
             var response = await httpclient.GetStringAsync(AppSetting.ApiUrl + "api/products?producttype="+productType+"&categoryId="+categoryId);
             return JsonConvert.DeserializeObject<List<Product>>(response);
         }
-        public static async Task<List<ProductDetail>> GetProductDetail(int productId)
+        public static async Task<ProductDetail> GetProductDetail(int productId)
         {
             var httpclient = new HttpClient();
             httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
             var response = await httpclient.GetStringAsync(AppSetting.ApiUrl + "api/products/" + productId);
-            return JsonConvert.DeserializeObject<List<ProductDetail>>(response);
+            return JsonConvert.DeserializeObject<ProductDetail>(response);
         }
         public async static Task<bool> AddItemInCart(ShoppingCart shoppingCart)
         {

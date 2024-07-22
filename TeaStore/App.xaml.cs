@@ -7,8 +7,15 @@ namespace TeaStore
         public App()
         {
             InitializeComponent();
-
-            MainPage = new SignupPage();
+           var accesstoken = Preferences.Get("accessToken", string.Empty);
+            if (string.IsNullOrEmpty(accesstoken))
+            {
+                MainPage = new NavigationPage(new SignupPage());
+            }
+            else
+            {
+                MainPage = new AppShell();
+            }
         }
     }
 }

@@ -19,5 +19,7 @@ namespace TeaStore.Models
         public string Detail { get; set; }
         [JsonProperty("imageUrl")]
         public string ImageUrl { get; set; }
+        public string FullImageUrl => AppSetting.ApiUrl + ImageUrl;
+
     }
 }
